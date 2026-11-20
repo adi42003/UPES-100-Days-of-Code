@@ -1,0 +1,97 @@
+name: Individual GCC Compile Audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/compile-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Compile all 150 programs individually in order
+        shell: bash
+        run: |
+          set +e
+          total=0
+          passed=0
+          failed=0
+          missing=0
+          report="$RUNNER_TEMP/compile-audit-results.txt"
+          : > "$report"
+          build_dir="$(mktemp -d)"
+
+          for day in $(seq 1 100); do
+            if [ "$day" -le 50 ]; then
+              programs="1 2"
+            else
+              programs="1"
+            fi
+
+            for program in $programs; do
+              total=$((total + 1))
+              source="Day $day/problem-$program.c"
+              executable="$build_dir/day-$day-program-$program"
+              printf '[%03d/150] Day %d, Program %d: ' "$total" "$day" "$program" | tee -a "$report"
+
+              if [ ! -f "$source" ]; then
+                echo "MISSING" | tee -a "$report"
+                missing=$((missing + 1))
+                failed=$((failed + 1))
+                continue
+              fi
+
+              if gcc -std=c11 -Wall -Wextra -Wpedantic -Werror "$source" -lm -o "$executable" >"$build_dir/stdout.log" 2>"$build_dir/stderr.log"; then
+                echo "PASS" | tee -a "$report"
+                passed=$((passed + 1))
+              else
+                echo "FAIL" | tee -a "$report"
+                failed=$((failed + 1))
+                {
+                  echo "---- Compiler output for $source ----"
+                  cat "$build_dir/stderr.log"
+                  cat "$build_dir/stdout.log"
+                  echo "---- End compiler output ----"
+                } | tee -a "$report"
+              fi
+            done
+          done
+
+          {
+            echo
+            echo "TOTAL=$total"
+            echo "PASSED=$passed"
+            echo "FAILED=$failed"
+            echo "MISSING=$missing"
+          } | tee -a "$report"
+
+          {
+            echo "## Individual GCC compile audit"
+            echo
+            echo "- Programs checked: $total"
+            echo "- Passed: $passed"
+            echo "- Failed or missing: $failed"
+            echo "- Missing source files: $missing"
+            echo
+            echo 'Full per-program output is available in the `compile-audit-results` artifact.'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if [ "$total" -ne 150 ] || [ "$failed" -ne 0 ]; then
+            exit 1
+          fi
+
+      - name: Upload per-program compile report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compile-audit-results
+          path: ${{ runner.temp }}/compile-audit-results.txt
+          if-no-files-found: error
