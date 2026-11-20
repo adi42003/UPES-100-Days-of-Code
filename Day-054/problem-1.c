@@ -3,20 +3,23 @@ Question: Write a Program to take a positive integer n as input, and find the pi
 */
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
 #include <math.h>
-#include <limits.h>
 
 int main(void) {
-    long long n,x;
-    if(scanf("%lld",&n)!=1 || n<1) return 1;
-    for(x=1;x<=n;x++) {
-        long long left=x*(x+1)/2;
-        long long right=n*(n+1)/2-(x-1)*x/2;
-        if(left==right) { printf("%lld\n",x); return 0; }
-    }
-    puts("-1");
+    long long n, x;
+    long double total, root;
+
+    if (scanf("%lld", &n) != 1 || n < 1)
+        return 1;
+
+    total = (long double)n * ((long double)n + 1.0L) / 2.0L;
+    root = sqrtl(total);
+    x = (long long)(root + 0.5L);
+
+    if ((long double)x * (long double)x == total)
+        printf("%lld\n", x);
+    else
+        puts("-1");
+
     return 0;
 }

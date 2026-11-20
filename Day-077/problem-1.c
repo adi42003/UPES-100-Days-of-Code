@@ -3,15 +3,11 @@ Question: Write a program that reads text from input.txt, converts all lowercase
 */
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <ctype.h>
-#include <math.h>
-#include <limits.h>
 
 int main(void) {
     FILE *inputFile, *outputFile;
-    int ch;
+    int ch, failed = 0;
 
     inputFile = fopen("input.txt", "r");
     if (inputFile == NULL) {
@@ -22,14 +18,29 @@ int main(void) {
     outputFile = fopen("output.txt", "w");
     if (outputFile == NULL) {
         fclose(inputFile);
+        puts("Cannot open output.txt");
         return 1;
     }
 
-    while ((ch = fgetc(inputFile)) != EOF)
-        fputc(toupper((unsigned char)ch), outputFile);
+    while ((ch = fgetc(inputFile)) != EOF) {
+        if (fputc(toupper((unsigned char)ch), outputFile) == EOF) {
+            failed = 1;
+            break;
+        }
+    }
 
-    fclose(inputFile);
-    fclose(outputFile);
+    if (ferror(inputFile))
+        failed = 1;
+    if (fclose(inputFile) != 0)
+        failed = 1;
+    if (fclose(outputFile) != 0)
+        failed = 1;
+
+    if (failed) {
+        puts("File conversion failed");
+        return 1;
+    }
+
     puts("Conversion completed. Output written to output.txt");
     return 0;
 }

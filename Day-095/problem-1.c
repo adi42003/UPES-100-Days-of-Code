@@ -36,7 +36,7 @@ int main(void) {
     }
 
     topper = topStudent(students, n);
-    printf("Top Student: %s | Roll: %d | Marks: %.0f\n",
+    printf("Top Student: %s | Roll: %d | Marks: %.2f\n",
            topper.name, topper.roll_no, topper.marks);
     return 0;
 }

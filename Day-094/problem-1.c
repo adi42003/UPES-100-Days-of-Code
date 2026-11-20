@@ -16,7 +16,7 @@ struct Student {
 };
 
 void printStudent(struct Student student) {
-    printf("Name: %s | Roll: %d | Marks: %.0f\n",
+    printf("Name: %s | Roll: %d | Marks: %.2f\n",
            student.name, student.roll_no, student.marks);
 }
 

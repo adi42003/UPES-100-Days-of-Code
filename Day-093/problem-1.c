@@ -29,7 +29,7 @@ int main(void) {
     for (i = 1; i < n; i++)
         if (students[i].marks > students[top].marks) top = i;
 
-    printf("Topper: %s (Marks: %.0f)\n",
+    printf("Topper: %s (Marks: %.2f)\n",
            students[top].name, students[top].marks);
     return 0;
 }

@@ -39,7 +39,7 @@ int main(void) {
 
     while (fscanf(file, "%99s %d %f", student.name,
                   &student.roll, &student.marks) == 3) {
-        printf("Name: %s | Roll: %d | Marks: %.0f\n",
+        printf("Name: %s | Roll: %d | Marks: %.2f\n",
                student.name, student.roll, student.marks);
     }
 

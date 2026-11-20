@@ -3,17 +3,27 @@ Question: Write a program to find the HCF (GCD) of two numbers.
 */
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-#include <math.h>
-#include <limits.h>
+
+static unsigned long long magnitude(long long value) {
+    return value < 0 ? 0ULL - (unsigned long long)value : (unsigned long long)value;
+}
 
 int main(void) {
-    int a,b,t;
-    if(scanf("%d %d",&a,&b)!=2) return 1;
-    a=abs(a); b=abs(b);
-    while(b!=0) { t=a%b; a=b; b=t; }
-    printf("%d\n",a);
+    long long inputA, inputB;
+    unsigned long long a, b, remainder;
+
+    if (scanf("%lld %lld", &inputA, &inputB) != 2)
+        return 1;
+
+    a = magnitude(inputA);
+    b = magnitude(inputB);
+
+    while (b != 0) {
+        remainder = a % b;
+        a = b;
+        b = remainder;
+    }
+
+    printf("%llu\n", a);
     return 0;
 }

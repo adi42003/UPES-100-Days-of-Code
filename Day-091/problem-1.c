@@ -21,7 +21,7 @@ int main(void) {
     if (scanf("%49s %d %f", student.name,
               &student.roll_no, &student.marks) != 3) return 1;
 
-    printf("Name: %s | Roll: %d | Marks: %.0f\n",
+    printf("Name: %s | Roll: %d | Marks: %.2f\n",
            student.name, student.roll_no, student.marks);
     return 0;
 }

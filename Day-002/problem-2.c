@@ -3,15 +3,15 @@ Question: Write a program to calculate the area and circumference of a circle gi
 */
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-#include <math.h>
-#include <limits.h>
 
 int main(void) {
-    double r, pi=3.141592653589793;
-    if (scanf("%lf", &r) != 1) return 1;
-    printf("Area=%.2f, Circumference=%.2f\n", pi*r*r, 2*pi*r);
+    double radius;
+    const double pi = 3.141592653589793;
+
+    if (scanf("%lf", &radius) != 1 || radius < 0.0)
+        return 1;
+
+    printf("Area=%.2f, Circumference=%.2f\n",
+           pi * radius * radius, 2.0 * pi * radius);
     return 0;
 }
