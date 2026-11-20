@@ -87,7 +87,7 @@ for qid in range(1, 147):
         raw_input = str(case.get("input", ""))
         if raw_input.strip().lower() == "no input":
             raw_input = ""
-        expected = norm(EXPECTED_OVERRIDES.get((qid, raw_input.replace("\\\\n", "\\n")), case["output"]))
+        expected = norm(EXPECTED_OVERRIDES.get((qid, raw_input.replace("\\n", "\n")), case["output"]))
         # Prose-only expected outputs are not executable assertions.
         if expected.startswith(("Pattern with ", "Note:", "Tabular list", "Displays file content")):
             continue
