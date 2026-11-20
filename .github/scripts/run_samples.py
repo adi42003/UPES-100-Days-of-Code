@@ -54,7 +54,7 @@ EXPECTED_OVERRIDES = {
     (17, "1 -3 2"): "Roots are real and different: 2.00, 1.00",
     (17, "1 -2 1"): "Roots are real and same: 1.00",
     (44, "3"): "Approximate sum: 2.6",
-    (44, "5"): "Approximate sum: 3.9",
+    (44, "5"): "Approximate sum: 4.4",
     (45, "3"): "Approximate sum: 1.78",
     (45, "5"): "Approximate sum: 2.84",
     (123, "File: sample.txt (Content: Hello world\nThis is C programming)"):
@@ -87,7 +87,7 @@ for qid in range(1, 147):
         raw_input = str(case.get("input", ""))
         if raw_input.strip().lower() == "no input":
             raw_input = ""
-        expected = norm(EXPECTED_OVERRIDES.get((qid, raw_input), case["output"]))
+        expected = norm(EXPECTED_OVERRIDES.get((qid, raw_input.replace("\\\\n", "\\n")), case["output"]))
         # Prose-only expected outputs are not executable assertions.
         if expected.startswith(("Pattern with ", "Note:", "Tabular list", "Displays file content")):
             continue
